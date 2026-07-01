@@ -154,17 +154,20 @@ main {
   color: var(--ink);
   font-size: 0.92rem;
 }
-.card-link {
+.card-links {
   margin-top: auto;
-  padding-top: 0.4rem;
+  padding-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
 }
-.card-link a {
+.card-links a {
   color: var(--accent);
   font-weight: 600;
   text-decoration: none;
   font-size: 0.9rem;
 }
-.card-link a:hover { text-decoration: underline; }
+.card-links a:hover { text-decoration: underline; }
 
 /* Status + footer */
 .status {

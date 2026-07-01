@@ -172,19 +172,42 @@ function renderCard(book) {
     card.appendChild(syn);
   }
 
+  const links = document.createElement("div");
+  links.className = "card-links";
+
+  // Goodreads: use the direct link when we have one, otherwise a search fallback
+  // (some books, e.g. regional titles, have no Goodreads page).
   if (book.goodreads && isSafeUrl(book.goodreads)) {
-    const wrap = document.createElement("div");
-    wrap.className = "card-link";
-    const a = document.createElement("a");
-    a.href = book.goodreads;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.textContent = "View on Goodreads →";
-    wrap.appendChild(a);
-    card.appendChild(wrap);
+    links.appendChild(makeLink(book.goodreads, "View on Goodreads →"));
+  } else {
+    links.appendChild(
+      makeLink(
+        `https://www.goodreads.com/search?q=${searchQuery(book)}`,
+        "Search Goodreads →"
+      )
+    );
   }
 
+  // Amazon: always a search on the India store, built from title + author.
+  links.appendChild(
+    makeLink(`https://www.amazon.in/s?k=${searchQuery(book)}`, "Find on Amazon →")
+  );
+
+  card.appendChild(links);
   return card;
+}
+
+function makeLink(href, text) {
+  const a = document.createElement("a");
+  a.href = href;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.textContent = text;
+  return a;
+}
+
+function searchQuery(book) {
+  return encodeURIComponent(`${book.title} ${book.author}`.trim());
 }
 
 function isSafeUrl(url) {
