@@ -1,0 +1,61 @@
+name: Add book from issue
+
+on:
+  issues:
+    types: [opened, labeled]
+
+# Only run for issues created via the "Add a book" form (label: add-book).
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  add-book:
+    if: contains(github.event.issue.labels.*.name, 'add-book')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse issue form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/add-book.yml
+
+      - name: Append book to books.csv
+        id: append
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+        run: node .github/scripts/append-book.js
+
+      - name: Create Pull Request
+        if: steps.append.outputs.ok == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: add-book/issue-${{ github.event.issue.number }}
+          commit-message: "Add book: ${{ steps.append.outputs.title }} (#${{ github.event.issue.number }})"
+          title: "Add book: ${{ steps.append.outputs.title }}"
+          body: |
+            Adds **${{ steps.append.outputs.title }}** by ${{ steps.append.outputs.author }} to `books.csv`.
+
+            Requested by @${{ github.event.issue.user.login }} in #${{ github.event.issue.number }}.
+
+            Closes #${{ github.event.issue.number }}
+          labels: add-book
+
+      - name: Comment on invalid submission
+        if: steps.append.outputs.ok != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const reason = process.env.REASON || 'Title and Author are required.';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `⚠️ This book could not be added automatically: ${reason}\n\nPlease edit the issue with the missing details, then re-apply the **add-book** label to try again.`,
+            });
+        env:
+          REASON: ${{ steps.append.outputs.reason }}

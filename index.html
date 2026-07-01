@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Exchange — Available Books</title>
+  <meta name="description" content="A shared list of hardcopy books available for exchange." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <h1>📚 Book Exchange</h1>
+        <p class="tagline">Hardcopy books available to exchange. Browse the list, then explore any title on Goodreads.</p>
+      </div>
+      <a id="add-book-btn" class="btn-add" href="#" target="_blank" rel="noopener">+ Add a book</a>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="controls-inner">
+      <input
+        type="search"
+        id="search"
+        class="search-input"
+        placeholder="Search by title or author…"
+        autocomplete="off"
+        aria-label="Search by title or author"
+      />
+      <select id="filter-genre" class="filter-select" aria-label="Filter by genre">
+        <option value="">All genres</option>
+      </select>
+      <select id="filter-language" class="filter-select" aria-label="Filter by language">
+        <option value="">All languages</option>
+      </select>
+      <span id="result-count" class="result-count" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <main>
+    <div id="book-grid" class="book-grid"></div>
+    <p id="status" class="status"></p>
+  </main>
+
+  <footer class="site-footer">
+    <p>New books appear here after a contribution Pull Request is merged. No personal details are collected or shown.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

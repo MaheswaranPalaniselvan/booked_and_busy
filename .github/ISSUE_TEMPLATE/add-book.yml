@@ -1,0 +1,57 @@
+name: 📚 Add a book
+description: Propose a hardcopy book to add to the exchange list. Submitting this opens a Pull Request automatically.
+title: "[Book] "
+labels: ["add-book"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing a book! Fill in the details below.
+        **Title** and **Author** are required — everything else is optional.
+        When you submit, a Pull Request is opened automatically. The book appears on the site once a maintainer merges it.
+        Please do **not** include any personal details — only book information is shown.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: The Pragmatic Programmer
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      description: If there are multiple authors, separate them with a semicolon (;).
+      placeholder: Andrew Hunt; David Thomas
+    validations:
+      required: true
+  - type: textarea
+    id: synopsis
+    attributes:
+      label: Synopsis
+      description: A short description of the book (optional).
+      placeholder: A classic guide to software craftsmanship…
+    validations:
+      required: false
+  - type: input
+    id: goodreads
+    attributes:
+      label: Goodreads link
+      description: URL to the book's Goodreads page (optional).
+      placeholder: https://www.goodreads.com/book/show/4099.The_Pragmatic_Programmer
+    validations:
+      required: false
+  - type: input
+    id: genre
+    attributes:
+      label: Genre / Category
+      placeholder: Non-fiction
+    validations:
+      required: false
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: English
+    validations:
+      required: false
