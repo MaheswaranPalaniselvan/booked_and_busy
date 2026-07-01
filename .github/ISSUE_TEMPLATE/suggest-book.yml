@@ -1,0 +1,36 @@
+name: 💡 Suggest a book
+description: Recommend a book for others to read (one you don't necessarily own). Submitting this opens a Pull Request automatically.
+title: "[Suggestion] "
+labels: ["suggest-book"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Recommend a great read to the community! This is different from **Add a book** —
+        use *Add a book* for books you own and can exchange, and *Suggest a book* to
+        recommend something worth reading.
+        **Title**, **Author**, and **Why you recommend it** are required.
+        When you submit, a Pull Request is opened automatically. The suggestion appears once a maintainer merges it.
+        Please do **not** include any personal details.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: The Midnight Library
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      placeholder: Matt Haig
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why do you recommend it?
+      description: In your own words, tell others why this book is worth reading.
+      placeholder: A moving, hopeful story about second chances that stayed with me long after finishing it.
+    validations:
+      required: true

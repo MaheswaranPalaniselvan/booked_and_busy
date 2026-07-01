@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book Exchange — Available Books</title>
-  <meta name="description" content="A shared list of hardcopy books available for exchange." />
+  <meta name="description" content="A shared list of hardcopy books available for exchange, plus community reading suggestions." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,39 +12,75 @@
     <div class="header-inner">
       <div>
         <h1>📚 Book Exchange</h1>
-        <p class="tagline">Hardcopy books available to exchange. Browse the list, then explore any title on Goodreads.</p>
+        <p class="tagline">Hardcopy books available to exchange, plus books the community recommends reading.</p>
       </div>
-      <a id="add-book-btn" class="btn-add" href="#" target="_blank" rel="noopener">+ Add a book</a>
+      <div class="header-actions">
+        <a id="add-book-btn" class="btn-add" href="#" target="_blank" rel="noopener">+ Add a book</a>
+        <a id="suggest-book-btn" class="btn-suggest" href="#" target="_blank" rel="noopener">💡 Suggest a book</a>
+      </div>
     </div>
   </header>
 
-  <section class="controls">
-    <div class="controls-inner">
-      <input
-        type="search"
-        id="search"
-        class="search-input"
-        placeholder="Search by title or author…"
-        autocomplete="off"
-        aria-label="Search by title or author"
-      />
-      <select id="filter-genre" class="filter-select" aria-label="Filter by genre">
-        <option value="">All genres</option>
-      </select>
-      <select id="filter-language" class="filter-select" aria-label="Filter by language">
-        <option value="">All languages</option>
-      </select>
-      <span id="result-count" class="result-count" aria-live="polite"></span>
+  <nav class="tabs" role="tablist">
+    <div class="tabs-inner">
+      <button id="tab-available" class="tab is-active" role="tab" aria-selected="true">
+        Available for exchange <span id="tab-available-count" class="tab-count"></span>
+      </button>
+      <button id="tab-suggestions" class="tab" role="tab" aria-selected="false">
+        Suggested reads <span id="tab-suggestions-count" class="tab-count"></span>
+      </button>
     </div>
+  </nav>
+
+  <!-- Available for exchange -->
+  <section id="panel-available" class="panel">
+    <div class="controls">
+      <div class="controls-inner">
+        <input
+          type="search"
+          id="search"
+          class="search-input"
+          placeholder="Search by title or author…"
+          autocomplete="off"
+          aria-label="Search by title or author"
+        />
+        <select id="filter-genre" class="filter-select" aria-label="Filter by genre">
+          <option value="">All genres</option>
+        </select>
+        <select id="filter-language" class="filter-select" aria-label="Filter by language">
+          <option value="">All languages</option>
+        </select>
+        <span id="result-count" class="result-count" aria-live="polite"></span>
+      </div>
+    </div>
+    <main>
+      <div id="book-grid" class="book-grid"></div>
+      <p id="status" class="status"></p>
+    </main>
   </section>
 
-  <main>
-    <div id="book-grid" class="book-grid"></div>
-    <p id="status" class="status"></p>
-  </main>
+  <!-- Community suggestions -->
+  <section id="panel-suggestions" class="panel" hidden>
+    <main>
+      <p class="panel-intro">Books recommended by the community — not necessarily available to exchange. Each suggestion includes why someone thinks it's worth reading.</p>
+      <div class="controls-inner">
+        <input
+          type="search"
+          id="search-suggestions"
+          class="search-input"
+          placeholder="Search suggestions by title or author…"
+          autocomplete="off"
+          aria-label="Search suggestions by title or author"
+        />
+        <span id="suggestion-count" class="result-count" aria-live="polite"></span>
+      </div>
+      <div id="suggestion-grid" class="book-grid"></div>
+      <p id="suggestion-status" class="status"></p>
+    </main>
+  </section>
 
   <footer class="site-footer">
-    <p>New books appear here after a contribution Pull Request is merged. No personal details are collected or shown.</p>
+    <p>Entries appear after a contribution Pull Request is merged. No personal details are collected or shown.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>

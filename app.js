@@ -1,10 +1,11 @@
 /* Book Exchange — client logic
- * Reads books.csv, renders cards, and provides search + genre/language filters.
- * No personal data is handled; only book fields are shown.
+ * Reads books.csv (books available for exchange) and suggestions.csv
+ * (community reading recommendations) and renders both. No personal data
+ * is handled; only book fields are shown.
  */
 
 // If the site is not hosted at owner.github.io/repo (e.g. a custom domain),
-// set this to "owner/repo" so the "Add a book" link resolves correctly.
+// set this to "owner/repo" so the contribution links resolve correctly.
 const REPO_OVERRIDE = ""; // e.g. "octocat/book-exchange"
 
 const els = {
@@ -15,29 +16,63 @@ const els = {
   language: document.getElementById("filter-language"),
   count: document.getElementById("result-count"),
   addBtn: document.getElementById("add-book-btn"),
+  suggestBtn: document.getElementById("suggest-book-btn"),
+  // Tabs
+  tabAvailable: document.getElementById("tab-available"),
+  tabSuggestions: document.getElementById("tab-suggestions"),
+  tabAvailableCount: document.getElementById("tab-available-count"),
+  tabSuggestionsCount: document.getElementById("tab-suggestions-count"),
+  panelAvailable: document.getElementById("panel-available"),
+  panelSuggestions: document.getElementById("panel-suggestions"),
+  // Suggestions
+  suggestionGrid: document.getElementById("suggestion-grid"),
+  suggestionStatus: document.getElementById("suggestion-status"),
+  suggestionSearch: document.getElementById("search-suggestions"),
+  suggestionCount: document.getElementById("suggestion-count"),
 };
 
 let allBooks = [];
+let allSuggestions = [];
 
 init();
 
 function init() {
-  setupAddBookLink();
+  setupContributionLinks();
+  setupTabs();
   loadBooks();
+  loadSuggestions();
   els.search.addEventListener("input", render);
   els.genre.addEventListener("change", render);
   els.language.addEventListener("change", render);
+  els.suggestionSearch.addEventListener("input", renderSuggestions);
 }
 
-/* Derive the GitHub repo (owner/repo) and point the button at the issue form. */
-function setupAddBookLink() {
+/* Point the "Add a book" and "Suggest a book" buttons at their issue forms. */
+function setupContributionLinks() {
   const repo = REPO_OVERRIDE || detectRepo();
   if (repo) {
     els.addBtn.href = `https://github.com/${repo}/issues/new?template=add-book.yml`;
+    els.suggestBtn.href = `https://github.com/${repo}/issues/new?template=suggest-book.yml`;
   } else {
-    // Fallback: hide the button rather than link somewhere wrong.
+    // Fallback: hide the buttons rather than link somewhere wrong.
     els.addBtn.style.display = "none";
+    els.suggestBtn.style.display = "none";
   }
+}
+
+function setupTabs() {
+  els.tabAvailable.addEventListener("click", () => switchTab("available"));
+  els.tabSuggestions.addEventListener("click", () => switchTab("suggestions"));
+}
+
+function switchTab(which) {
+  const showSuggestions = which === "suggestions";
+  els.panelSuggestions.hidden = !showSuggestions;
+  els.panelAvailable.hidden = showSuggestions;
+  els.tabSuggestions.classList.toggle("is-active", showSuggestions);
+  els.tabAvailable.classList.toggle("is-active", !showSuggestions);
+  els.tabSuggestions.setAttribute("aria-selected", String(showSuggestions));
+  els.tabAvailable.setAttribute("aria-selected", String(!showSuggestions));
 }
 
 function detectRepo() {
@@ -66,6 +101,7 @@ function loadBooks() {
       } else {
         els.status.textContent = "";
       }
+      els.tabAvailableCount.textContent = allBooks.length ? `(${allBooks.length})` : "";
       populateFilters();
       render();
     },
@@ -73,6 +109,39 @@ function loadBooks() {
       els.status.textContent = "Sorry, the book list could not be loaded.";
     },
   });
+}
+
+function loadSuggestions() {
+  els.suggestionStatus.textContent = "Loading suggestions…";
+  Papa.parse("suggestions.csv", {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: (results) => {
+      allSuggestions = (results.data || [])
+        .map(normalizeSuggestion)
+        .filter((s) => s.title && s.author); // title + author are mandatory
+      els.suggestionStatus.textContent = allSuggestions.length
+        ? ""
+        : "No suggestions yet. Be the first to recommend a book!";
+      els.tabSuggestionsCount.textContent = allSuggestions.length
+        ? `(${allSuggestions.length})`
+        : "";
+      renderSuggestions();
+    },
+    error: () => {
+      els.suggestionStatus.textContent = "Sorry, the suggestions could not be loaded.";
+    },
+  });
+}
+
+function normalizeSuggestion(row) {
+  const get = (k) => (row[k] == null ? "" : String(row[k]).trim());
+  return {
+    title: get("title"),
+    author: get("author"),
+    reason: get("reason"),
+  };
 }
 
 function normalizeBook(row) {
@@ -230,4 +299,69 @@ function searchQuery(book) {
 
 function isSafeUrl(url) {
   return /^https?:\/\//i.test(url);
+}
+
+function renderSuggestions() {
+  const q = els.suggestionSearch.value.trim().toLowerCase();
+  const filtered = allSuggestions.filter(
+    (s) =>
+      !q ||
+      s.title.toLowerCase().includes(q) ||
+      s.author.toLowerCase().includes(q)
+  );
+
+  els.suggestionGrid.innerHTML = "";
+  for (const s of filtered) els.suggestionGrid.appendChild(renderSuggestionCard(s));
+
+  if (allSuggestions.length > 0) {
+    const n = filtered.length;
+    els.suggestionCount.textContent = `${n} suggestion${n === 1 ? "" : "s"}`;
+    els.suggestionStatus.textContent = n === 0 ? "No suggestions match your search." : "";
+  }
+}
+
+function renderSuggestionCard(s) {
+  const card = document.createElement("article");
+  card.className = "card";
+
+  const title = document.createElement("h2");
+  title.className = "card-title";
+  title.textContent = s.title;
+  card.appendChild(title);
+
+  const author = document.createElement("p");
+  author.className = "card-author";
+  author.textContent = `by ${s.author}`;
+  card.appendChild(author);
+
+  if (s.reason) {
+    const reason = document.createElement("blockquote");
+    reason.className = "card-reason";
+    const label = document.createElement("span");
+    label.className = "card-reason-label";
+    label.textContent = "Why read this";
+    reason.appendChild(label);
+    const text = document.createElement("p");
+    text.textContent = s.reason;
+    reason.appendChild(text);
+    card.appendChild(reason);
+  }
+
+  // Suggestions have no stored links; always offer search links so readers
+  // can explore the recommended title.
+  const links = document.createElement("div");
+  links.className = "card-links";
+  links.appendChild(
+    makeLink(
+      `https://www.goodreads.com/search?q=${searchQuery(s)}`,
+      "Search Goodreads",
+      "link-goodreads"
+    )
+  );
+  links.appendChild(
+    makeLink(`https://www.amazon.in/s?k=${searchQuery(s)}`, "Find on Amazon", "link-amazon")
+  );
+  card.appendChild(links);
+
+  return card;
 }

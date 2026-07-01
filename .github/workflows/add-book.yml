@@ -28,6 +28,9 @@ jobs:
         id: append
         env:
           ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          CSV_FILE: books.csv
+          COLUMNS: title,author,synopsis,goodreads,genre,language,amazon
+          REQUIRED: title,author
         run: node .github/scripts/append-book.js
 
       - name: Create Pull Request
