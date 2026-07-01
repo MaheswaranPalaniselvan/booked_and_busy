@@ -9,7 +9,7 @@
 const fs = require("fs");
 
 const CSV_PATH = "books.csv";
-const COLUMNS = ["title", "author", "synopsis", "goodreads", "genre", "language"];
+const COLUMNS = ["title", "author", "synopsis", "goodreads", "genre", "language", "amazon"];
 const NONE = /^(_no response_|_none_|n\/a|na|none|-)?$/i; // treat as empty
 
 function setOutput(name, value) {
@@ -48,9 +48,12 @@ function main() {
     return;
   }
 
-  // Basic URL sanity: drop a goodreads value that is not an http(s) link.
+  // Basic URL sanity: drop link values that are not http(s) links.
   if (book.goodreads && !/^https?:\/\//i.test(book.goodreads)) {
     book.goodreads = "";
+  }
+  if (book.amazon && !/^https?:\/\//i.test(book.amazon)) {
+    book.amazon = "";
   }
 
   // Ensure the file ends with a newline before appending.

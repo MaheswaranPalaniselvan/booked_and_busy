@@ -37,8 +37,16 @@ body:
     id: goodreads
     attributes:
       label: Goodreads link
-      description: URL to the book's Goodreads page (optional).
+      description: URL to the book's Goodreads page (optional). If left blank, the site links to a Goodreads search instead.
       placeholder: https://www.goodreads.com/book/show/4099.The_Pragmatic_Programmer
+    validations:
+      required: false
+  - type: input
+    id: amazon
+    attributes:
+      label: Amazon link
+      description: URL to the book's Amazon product page (optional). If left blank, the site links to an Amazon search instead.
+      placeholder: https://www.amazon.in/dp/0143333097
     validations:
       required: false
   - type: input

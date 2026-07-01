@@ -16,7 +16,7 @@ Each book shows its **title**, **author**, an optional **synopsis**, **genre**, 
 Every card shows two outbound links, both generated in the browser so there is nothing to maintain and any newly-added book gets them automatically:
 
 - **Goodreads** — uses the direct Goodreads page when the `goodreads` column has a URL (`View on Goodreads →`); otherwise falls back to a Goodreads search built from the title + author (`Search Goodreads →`), so books without a Goodreads page are still linked.
-- **Amazon** — always an amazon.in search built from the title + author (`Find on Amazon →`). This is a search link (not a specific product page), so it reliably lands on the listing for that title without needing per-book maintenance.
+- **Amazon** — uses the direct amazon.in product page when the `amazon` column has a URL (`Amazon`); otherwise falls back to an amazon.in search built from the title + author (`Find on Amazon →`).
 
 ```
 Visitor      → opens site → books.csv rendered as cards (search + filter)
@@ -27,11 +27,11 @@ Maintainer   → merges PR → books.csv updated → site shows the new book
 ## Adding a book
 
 1. Click **"+ Add a book"** on the site (or open a new issue using the **📚 Add a book** template).
-2. Fill in the form. **Title** and **Author** are required; synopsis, Goodreads link, genre, and language are optional.
+2. Fill in the form. **Title** and **Author** are required; synopsis, Goodreads link, Amazon link, genre, and language are optional.
 3. Submit. A GitHub Action parses your submission, appends a properly-escaped row to `books.csv`, and opens a Pull Request that closes your issue.
 4. A maintainer reviews and merges the PR — the book then appears on the site.
 
-The data columns are: `title,author,synopsis,goodreads,genre,language`.
+The data columns are: `title,author,synopsis,goodreads,genre,language,amazon`.
 
 ## Maintainer setup (one-time)
 
