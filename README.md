@@ -20,8 +20,8 @@ Each available book shows its **title**, **author**, an optional **synopsis**, *
 
 Every card shows two outbound links, both generated in the browser so there is nothing to maintain and any newly-added book gets them automatically:
 
-- **Goodreads** — uses the direct Goodreads page when the `goodreads` column has a URL (`View on Goodreads →`); otherwise falls back to a Goodreads search built from the title + author (`Search Goodreads →`), so books without a Goodreads page are still linked.
-- **Amazon** — uses the direct amazon.in product page when the `amazon` column has a URL (`Amazon`); otherwise falls back to an amazon.in search built from the title + author (`Find on Amazon →`).
+- **Goodreads** — uses the direct Goodreads page when the `goodreads` column has a URL; otherwise falls back to a Goodreads search built from the title + author, so books without a Goodreads page are still linked.
+- **Amazon _or_ Wikipedia** — when the `amazon` column has a URL, the card links to that amazon.in product page (`Amazon`). When it doesn't, the card shows a **Wikipedia** link instead — the direct page from the `wiki` column if present, otherwise a Wikipedia search. This is more useful than an Amazon search for books not sold there, and for **suggestions** (which may be topics, people, or events rather than books) Wikipedia is the natural reference.
 
 ```
 Visitor      → opens site → books.csv / suggestions.csv rendered as cards
@@ -36,7 +36,7 @@ Maintainer   → merges PR → CSV updated → site shows the new entry
 3. Submit. A GitHub Action appends a properly-escaped row to `books.csv` and opens a Pull Request that closes your issue.
 4. A maintainer reviews and merges the PR — the book then appears on the **Available for exchange** tab.
 
-Book columns: `title,author,synopsis,goodreads,genre,language,amazon`.
+Book columns: `title,author,synopsis,goodreads,genre,language,amazon,wiki`.
 
 ## Suggesting a book (a recommendation)
 
@@ -45,7 +45,7 @@ Book columns: `title,author,synopsis,goodreads,genre,language,amazon`.
 3. Submit. A GitHub Action appends a row to `suggestions.csv` and opens a Pull Request that closes your issue.
 4. A maintainer reviews and merges the PR — the suggestion then appears on the **Suggested reads** tab.
 
-Suggestion columns: `title,author,reason`.
+Suggestion columns: `title,author,reason,wiki`.
 
 ## Maintainer setup (one-time)
 

@@ -141,6 +141,7 @@ function normalizeSuggestion(row) {
     title: get("title"),
     author: get("author"),
     reason: get("reason"),
+    wiki: get("wiki"),
   };
 }
 
@@ -159,6 +160,7 @@ function normalizeBook(row) {
       : [],
     language: get("language"),
     amazon: get("amazon"),
+    wiki: get("wiki"),
   };
 }
 
@@ -269,18 +271,29 @@ function renderCard(book) {
     );
   }
 
-  // Amazon: use the direct product link when we have one, otherwise a search
-  // on the India store built from title + author.
+  // Amazon when we have a direct product link; otherwise a Wikipedia link,
+  // which is more useful than an Amazon search for books not sold there.
   if (book.amazon && isSafeUrl(book.amazon)) {
     links.appendChild(makeLink(book.amazon, "Amazon", "link-amazon"));
   } else {
-    links.appendChild(
-      makeLink(`https://www.amazon.in/s?k=${searchQuery(book)}`, "Find on Amazon", "link-amazon")
-    );
+    links.appendChild(wikiLink(book));
   }
 
   card.appendChild(links);
   return card;
+}
+
+// Wikipedia: direct page if provided, otherwise a Wikipedia search. Works for
+// both books and non-book suggestions (topics, people, events).
+function wikiLink(entry) {
+  if (entry.wiki && isSafeUrl(entry.wiki)) {
+    return makeLink(entry.wiki, "Wikipedia", "link-wiki");
+  }
+  return makeLink(
+    `https://en.wikipedia.org/w/index.php?search=${searchQuery(entry)}`,
+    "Search Wikipedia",
+    "link-wiki"
+  );
 }
 
 function makeLink(href, text, className) {
@@ -347,8 +360,8 @@ function renderSuggestionCard(s) {
     card.appendChild(reason);
   }
 
-  // Suggestions have no stored links; always offer search links so readers
-  // can explore the recommended title.
+  // A suggestion may be a book or a topic, so pair Goodreads (search) with a
+  // Wikipedia link (direct page if provided, otherwise a Wikipedia search).
   const links = document.createElement("div");
   links.className = "card-links";
   links.appendChild(
@@ -358,9 +371,7 @@ function renderSuggestionCard(s) {
       "link-goodreads"
     )
   );
-  links.appendChild(
-    makeLink(`https://www.amazon.in/s?k=${searchQuery(s)}`, "Find on Amazon", "link-amazon")
-  );
+  links.appendChild(wikiLink(s));
   card.appendChild(links);
 
   return card;

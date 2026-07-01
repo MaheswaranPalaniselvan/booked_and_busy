@@ -45,8 +45,16 @@ body:
     id: amazon
     attributes:
       label: Amazon link
-      description: URL to the book's Amazon product page (optional). If left blank, the site links to an Amazon search instead.
+      description: URL to the book's Amazon product page (optional). If left blank, the site shows a Wikipedia link instead.
       placeholder: https://www.amazon.in/dp/0143333097
+    validations:
+      required: false
+  - type: input
+    id: wiki
+    attributes:
+      label: Wikipedia link
+      description: URL to the book's Wikipedia page (optional). Shown when there is no Amazon link. If left blank, the site links to a Wikipedia search instead.
+      placeholder: https://en.wikipedia.org/wiki/The_Pragmatic_Programmer
     validations:
       required: false
   - type: input

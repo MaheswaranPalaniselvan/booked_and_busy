@@ -68,7 +68,7 @@ function main() {
   }
 
   // Basic URL sanity: drop link values that are not http(s) links.
-  for (const col of ["goodreads", "amazon"]) {
+  for (const col of ["goodreads", "amazon", "wiki"]) {
     if (entry[col] && !/^https?:\/\//i.test(entry[col])) entry[col] = "";
   }
 

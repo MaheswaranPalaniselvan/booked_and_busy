@@ -30,7 +30,15 @@ body:
     id: reason
     attributes:
       label: Why do you recommend it?
-      description: In your own words, tell others why this book is worth reading.
+      description: In your own words, tell others why this book (or topic) is worth exploring.
       placeholder: A moving, hopeful story about second chances that stayed with me long after finishing it.
     validations:
       required: true
+  - type: input
+    id: wiki
+    attributes:
+      label: Wikipedia link
+      description: URL to a Wikipedia page for the book, author, or topic (optional). If left blank, the site links to a Wikipedia search instead.
+      placeholder: https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow
+    validations:
+      required: false

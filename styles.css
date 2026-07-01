@@ -276,6 +276,16 @@ main {
   color: #fff;
   border-color: #b45309;
 }
+.link-wiki {
+  color: #3a4a5a;
+  background: #eef1f4;
+  border-color: #dde3ea;
+}
+.link-wiki:hover {
+  background: #3a4a5a;
+  color: #fff;
+  border-color: #3a4a5a;
+}
 
 /* Status + footer */
 .status {
