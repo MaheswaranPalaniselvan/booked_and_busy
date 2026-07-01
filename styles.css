@@ -155,6 +155,10 @@ main {
   padding: 0.15rem 0.55rem;
   border-radius: 999px;
 }
+.badge-lang {
+  background: #e7eef2;
+  color: #38606f;
+}
 .card-synopsis {
   margin: 0.15rem 0 0;
   color: var(--ink);

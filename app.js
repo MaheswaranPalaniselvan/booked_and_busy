@@ -77,19 +77,24 @@ function loadBooks() {
 
 function normalizeBook(row) {
   const get = (k) => (row[k] == null ? "" : String(row[k]).trim());
+  const genre = get("genre");
   return {
     title: get("title"),
     author: get("author"),
     synopsis: get("synopsis"),
     goodreads: get("goodreads"),
-    genre: get("genre"),
+    genre: genre,
+    // Individual genres, so each can be its own badge and filter option.
+    genreList: genre
+      ? genre.split(",").map((g) => g.trim()).filter(Boolean)
+      : [],
     language: get("language"),
     amazon: get("amazon"),
   };
 }
 
 function populateFilters() {
-  fillSelect(els.genre, unique(allBooks.map((b) => b.genre)));
+  fillSelect(els.genre, unique(allBooks.flatMap((b) => b.genreList)));
   fillSelect(els.language, unique(allBooks.map((b) => b.language)));
 }
 
@@ -122,7 +127,7 @@ function render() {
       !q ||
       b.title.toLowerCase().includes(q) ||
       b.author.toLowerCase().includes(q);
-    const matchesGenre = !genre || b.genre === genre;
+    const matchesGenre = !genre || b.genreList.includes(genre);
     const matchesLang = !language || b.language === language;
     return matchesSearch && matchesGenre && matchesLang;
   });
@@ -153,15 +158,20 @@ function renderCard(book) {
   author.textContent = `by ${book.author}`;
   card.appendChild(author);
 
-  const badgeValues = [book.genre, book.language].filter(Boolean);
-  if (badgeValues.length) {
+  if (book.genreList.length || book.language) {
     const badges = document.createElement("div");
     badges.className = "badges";
-    for (const val of badgeValues) {
+    for (const g of book.genreList) {
       const b = document.createElement("span");
       b.className = "badge";
-      b.textContent = val;
+      b.textContent = g;
       badges.appendChild(b);
+    }
+    if (book.language) {
+      const lang = document.createElement("span");
+      lang.className = "badge badge-lang";
+      lang.textContent = book.language;
+      badges.appendChild(lang);
     }
     card.appendChild(badges);
   }
