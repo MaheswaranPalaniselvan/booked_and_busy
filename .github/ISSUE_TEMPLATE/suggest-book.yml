@@ -9,7 +9,8 @@ body:
         Recommend a great read to the community! This is different from **Add a book** —
         use *Add a book* for books you own and can exchange, and *Suggest a book* to
         recommend something worth reading.
-        **Title**, **Author**, and **Why you recommend it** are required.
+        A suggestion can be a **book** or a **topic** (a person, event, or idea).
+        **Title** and **Why you recommend it** are required; leave **Author** blank for a topic.
         When you submit, a Pull Request is opened automatically. The suggestion appears once a maintainer merges it.
         Please do **not** include any personal details.
   - type: input
@@ -23,9 +24,10 @@ body:
     id: author
     attributes:
       label: Author
+      description: Leave blank if this is a topic rather than a book — it will be labelled a "Topic" on the site.
       placeholder: Matt Haig
     validations:
-      required: true
+      required: false
   - type: textarea
     id: reason
     attributes:

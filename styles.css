@@ -215,6 +215,14 @@ main {
   background: #e7eef2;
   color: #38606f;
 }
+.badge-book {
+  background: var(--badge-bg);
+  color: var(--accent-strong);
+}
+.badge-topic {
+  background: #e3efe6;
+  color: #2f6b46;
+}
 .card-synopsis {
   margin: 0.15rem 0 0;
   color: var(--ink);

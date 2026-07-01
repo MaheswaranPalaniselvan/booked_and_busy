@@ -30,7 +30,7 @@ jobs:
           ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
           CSV_FILE: suggestions.csv
           COLUMNS: title,author,reason,wiki
-          REQUIRED: title,author,reason
+          REQUIRED: title,reason
         run: node .github/scripts/append-book.js
 
       - name: Create Pull Request

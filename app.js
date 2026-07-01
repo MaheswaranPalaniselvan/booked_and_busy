@@ -120,7 +120,7 @@ function loadSuggestions() {
     complete: (results) => {
       allSuggestions = (results.data || [])
         .map(normalizeSuggestion)
-        .filter((s) => s.title && s.author); // title + author are mandatory
+        .filter((s) => s.title); // title is mandatory; author is optional (topics)
       els.suggestionStatus.textContent = allSuggestions.length
         ? ""
         : "No suggestions yet. Be the first to recommend a book!";
@@ -342,10 +342,22 @@ function renderSuggestionCard(s) {
   title.textContent = s.title;
   card.appendChild(title);
 
-  const author = document.createElement("p");
-  author.className = "card-author";
-  author.textContent = `by ${s.author}`;
-  card.appendChild(author);
+  // A suggestion with an author is a book; without one it's a topic.
+  const isTopic = !s.author;
+  const badges = document.createElement("div");
+  badges.className = "badges";
+  const typeBadge = document.createElement("span");
+  typeBadge.className = isTopic ? "badge badge-topic" : "badge badge-book";
+  typeBadge.textContent = isTopic ? "Topic" : "Book";
+  badges.appendChild(typeBadge);
+  card.appendChild(badges);
+
+  if (s.author) {
+    const author = document.createElement("p");
+    author.className = "card-author";
+    author.textContent = `by ${s.author}`;
+    card.appendChild(author);
+  }
 
   if (s.reason) {
     const reason = document.createElement("blockquote");

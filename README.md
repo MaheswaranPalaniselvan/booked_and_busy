@@ -3,7 +3,7 @@
 A simple, static GitHub Pages site with two tabs:
 
 - **Available for exchange** — **hardcopy books someone owns** and is willing to swap.
-- **Suggested reads** — books the community **recommends reading** (not necessarily owned), each with a short note on *why* it's worth reading.
+- **Suggested reads** — books *or* topics the community **recommends** (not necessarily owned), each with a short note on *why* it's worth exploring. Entries with an author are labelled **Book**; those without (a person, event, or idea) are labelled **Topic**.
 
 It shows only book details — **no personal or owner information** is ever collected or displayed.
 
@@ -41,7 +41,7 @@ Book columns: `title,author,synopsis,goodreads,genre,language,amazon,wiki`.
 ## Suggesting a book (a recommendation)
 
 1. Click **"💡 Suggest a book"** on the site (or open a new issue using the **💡 Suggest a book** template).
-2. Fill in the form. **Title**, **Author**, and **Why you recommend it** are all required.
+2. Fill in the form. **Title** and **Why you recommend it** are required; **Author** is optional — leave it blank for a topic (labelled **Topic** on the site) rather than a book.
 3. Submit. A GitHub Action appends a row to `suggestions.csv` and opens a Pull Request that closes your issue.
 4. A maintainer reviews and merges the PR — the suggestion then appears on the **Suggested reads** tab.
 
