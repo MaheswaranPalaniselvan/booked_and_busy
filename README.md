@@ -2,13 +2,21 @@
 
 A simple, static GitHub Pages site that lists **hardcopy books available for exchange**. It shows only book details — **no personal or owner information** is ever collected or displayed.
 
-Each book shows its **title**, **author**, an optional **synopsis**, **genre**, **language**, and a link to explore it further on **Goodreads**.
+Each book shows its **title**, **author**, an optional **synopsis**, **genre**, **language**, and links to explore it further on **Goodreads** and **Amazon**.
 
 ## How it works
 
 - The site is plain HTML/CSS/JS. It reads all books from [`books.csv`](books.csv) and renders them as searchable, filterable cards.
 - Visitors can **search** by title/author and **filter** by genre and language.
+- Each card links out to **Goodreads** and **Amazon** (see below).
 - Anyone can **propose a new book** through a structured form. This automatically opens a Pull Request. A book only appears on the site **after a maintainer merges that PR**.
+
+### Book links
+
+Every card shows two outbound links, both generated in the browser so there is nothing to maintain and any newly-added book gets them automatically:
+
+- **Goodreads** — uses the direct Goodreads page when the `goodreads` column has a URL (`View on Goodreads →`); otherwise falls back to a Goodreads search built from the title + author (`Search Goodreads →`), so books without a Goodreads page are still linked.
+- **Amazon** — always an amazon.in search built from the title + author (`Find on Amazon →`). This is a search link (not a specific product page), so it reliably lands on the listing for that title without needing per-book maintenance.
 
 ```
 Visitor      → opens site → books.csv rendered as cards (search + filter)
